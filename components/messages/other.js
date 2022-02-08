@@ -15,7 +15,7 @@ function OtherMessage({ message }) {
                 </div>
                 <div className="_chat_middle_message">
 
-                    {message.archived ? (
+                    {message.deleted ? (
                         <div className='border border-dark px-3 py-2 rounded-pill ms-2'>
                             deleted
                         </div>

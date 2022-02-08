@@ -49,7 +49,6 @@ function ChatList({ setConversation, convid, setchatuser, user }) {
         if (socket.current) {
             socket.current.onmessage = (event) => {
                 const data = JSON.parse(event.data);
-                console.log(data);
                 if (data?.type == 'update') {
                     if (data.result?.initiator == user?.id) {
                         setUsers(users.map((u) => {
@@ -79,6 +78,7 @@ function ChatList({ setConversation, convid, setchatuser, user }) {
         }
 
 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [users, convid]);
 
     useEffect(() => {
@@ -107,7 +107,7 @@ function ChatList({ setConversation, convid, setchatuser, user }) {
                             <p
                                 className={`_chat_left_inner_box_txt_para`}> {
                                     user.conversation ?
-                                        user.conversation?.last_msg?.archived ? 'deleted' : user.conversation?.last_msg?.text
+                                        user.conversation?.last_msg?.deleted ? 'deleted' : user.conversation?.last_msg?.text
                                         : "Tap here to start conversation"}</p>
                         </div>
                     </div>

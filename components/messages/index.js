@@ -58,10 +58,12 @@ function Messages({ convid, user, chatuser }) {
                 }
 
                 if (data?.type == "all") {
+                    console.log(data.results);
                     setMessages(data.results)
                     chatBottom?.current?.scrollIntoView({ block: "end" });
                 }
                 if (data?.type == "individual") {
+                    console.log(data.results);
                     setMessages([...messages, data.results]);
                     // message read.
                     if (user?.id != data.results.sender) {
@@ -71,13 +73,23 @@ function Messages({ convid, user, chatuser }) {
                             type: "read",
                         }))
                     }
+                    chatBottom?.current?.scrollIntoView({ behavior: 'smooth', block: "end" });
+                }
+                if (data?.type == 'read') {
+                    setMessages(messages.map((item) => {
+                        return item.id === data.results.id ? data.results : item;
+                    }))
                 }
                 if (data?.type == 'delete') {
                     setMessages(messages.map((item) => {
                         return item.id === data.results.id ? data.results : item;
                     }))
                 }
-                chatBottom?.current?.scrollIntoView({ behavior: 'smooth', block: "end" });
+                if (data?.type == 'deleteall') {
+                    setMessages(messages.map((item) => {
+                        return item.id === data.results.id ? data.results : item;
+                    }))
+                }
 
             }
         }
@@ -113,6 +125,12 @@ function Messages({ convid, user, chatuser }) {
             type: "delete"
         }))
 
+    }
+    const onDeleteAll = (id) => {
+        socket.current?.send(JSON.stringify({
+            messageID: id,
+            type: "deleteall"
+        }))
     }
 
     return (
@@ -224,7 +242,7 @@ function Messages({ convid, user, chatuser }) {
                 <div className="_chat_middle_box  _padd_b24 _padd_t24 _padd_l24 _padd_r24">
                     {messages?.map((message) => message.sender == user.id ?
                         (
-                            <OwnMessage message={message} key={message.id} ondelete={onDelete} />
+                            <OwnMessage message={message} key={message.id} ondelete={onDelete} ondeleteall={onDeleteAll} />
                         )
 
                         : (
